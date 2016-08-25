@@ -16,9 +16,9 @@ public class cameraAvatar : MonoBehaviour {
         cardboardSet = GameObject.FindGameObjectWithTag("MainCamera");
         cbTrans = cardboardSet.transform;
         camPos = cam.transform.position;
-        Vector3 newPos = new Vector3(camPos.x, camPos.y + screenCoord.y, camPos.z + distance);
+        Vector3 newPos = new Vector3(camPos.x, camPos.y + screenCoord.y, camPos.z + distance);//critical to place the leaf in front of the cam
         this.transform.position = newPos;
-        this.transform.LookAt(cam.transform.position);
+        this.transform.LookAt(cam.transform.position);//add the texture of the leaf
 	}
 	
 	// Update is called once per frame

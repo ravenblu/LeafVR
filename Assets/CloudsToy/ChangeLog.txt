@@ -1,0 +1,4 @@
+CloudsToy ChangeLog - Unity 5.
+
+v1.0 - Initial release.
+v1.1 - SpeedTrees removed from the project.

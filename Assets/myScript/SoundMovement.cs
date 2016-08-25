@@ -11,17 +11,17 @@ public class SoundMovement : MonoBehaviour {
     public CardboardHead head;
 
 	public Vector3 acc;
-	public float drag;
-	//public Vector3 maxSpeed;
-	//public Vector3 minSpeed;
+	public float drag; 
+
 	public float lastRecordingTime = 0f;
 
 	public Rigidbody rb;
-	public GameObject cardboardSet;
+	//public GameObject cardboardSet;
 	private cameraAvatar avaCam;
 	private Vector3 camPos;
 
-    private GameObject pivot;
+	private Transform lastTrans;
+	public float damping = 5.0f;
 
     //public CanSpawn can;
 
@@ -31,11 +31,11 @@ public class SoundMovement : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		avaCam = GetComponent<cameraAvatar>();
-		cardboardSet = GameObject.FindGameObjectWithTag("MainCamera");
+		//avaCam = GetComponent<cameraAvatar>();
+		//cardboardSet = GameObject.FindGameObjectWithTag("MainCamera");
 		rb = this.GetComponent<Rigidbody>();
 		acc = new Vector3(0f, 0f, acceleration);
-		camPos = cardboardSet.transform.position;
+		//camPos = cardboardSet.transform.position;
 
 		AudioSource aud = GetComponent<AudioSource> ();
 		aud.mute = true;
@@ -49,15 +49,12 @@ public class SoundMovement : MonoBehaviour {
 		//}
 		aud.clip = Microphone.Start(null, false, 5, 44100); // You can change the length of recording here
 
-        cardboardSet.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1.5f);
-        cardboardSet.transform.LookAt(this.transform);
+		//head.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1.5f);
+		//head.transform.LookAt(this.transform);
 
-        pivot = new GameObject();
-        pivot.transform.position = cardboardSet.transform.position;
-        pivot.transform.LookAt(this.transform);
-        pivot.AddComponent<CardboardHead>();
-        //pivot.transform.parent = cardboardSet.transform;
-        this.transform.parent = pivot.transform;
+		//rb.velocity = new Vector3 (0f, 0f, velocity);
+
+		lastTrans = this.transform;
     }
 
 
@@ -65,58 +62,22 @@ public class SoundMovement : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        //pivot.transform.LookAt(cardboardSet.transform.position);
-        /*
-        if (Cardboard.SDK.Tilted)
-        {
-            if (Cardboard.SDK.HeadRotation.z < 1f && rb.angularVelocity == Vector3.zero)
-            {
-                Vector3 directedAcc = Vector3.right * acceleration * rb.mass;
-                rb.angularVelocity = directedAcc;
-                rb.angularDrag = .5f;
-            }
-            else if (Cardboard.SDK.HeadRotation.z > 1f)
-            {
-                Vector3 directedAcc = Vector3.left * acceleration * rb.mass;
-                rb.angularVelocity = directedAcc;
-                rb.angularDrag = .5f;
-            }
-            
-        }*/
 
-		if(soundDetected()) {
-			Debug.Log("Sound detected");
-            //Vector3 directedAcc = Vector3.forward * acceleration *rb.mass;
-            Vector3 directedAcc = head.Gaze.direction * acceleration * rb.mass;
-            rb.AddForce(directedAcc);
-			//rb.AddForce(0f,0f,acceleration * rb.mass);
-            //can.activate();
+		if (soundDetected ()) {
+			//Expel, or push the cans forward
 
+
+
+
+
+
+
+			//Let the camera follow the leaf
+			//head.transform.position = Vector3.Lerp (transform.position, lastTrans.position, Time.deltaTime * damping);
+			//lastTrans = this.transform;
 		}
 
-		else
-		//	Debug.Log("Sound not detected");
-			rb.drag = drag;
-
-        //can.deactivate();
-
-
-
-        //}
-        pivot.transform.rotation =  Quaternion.RotateTowards(this.transform.rotation, head.transform.rotation, 1.5f*Time.deltaTime);
-        //pivot.transform.rotation = Quaternion.Lerp(this.transform.rotation, head.transform.rotation, Time.deltaTime);
-
-        // Get the camera to follow the leaf
-		velocity = - rb.velocity.z;
-        cardboardSet.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1.5f);
-
-
-        //avaCam.cameraPosUpdate(velocity);
-        //cameraPosUpdate (velocity); // Disable cameraAvatar and use the function inside this script
-
-
-
-
+		
         if (Time.time - lastRecordingTime > 5) {
 			Debug.Log ("Time reset");
 			lastRecordingTime = Time.time;
@@ -126,8 +87,7 @@ public class SoundMovement : MonoBehaviour {
 
     }//update
 
-
-
+	
 	bool soundDetected() {
 
 		AudioSource aud = GetComponent<AudioSource> ();
@@ -157,8 +117,5 @@ public class SoundMovement : MonoBehaviour {
 			return false;
 	}
 
-	/*void cameraPosUpdate(float v) {
-		cardboardSet.transform.Translate (Vector3.forward * v, this.transform.position);
-	}*/
 
 }
