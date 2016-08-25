@@ -24,7 +24,6 @@ public class Movement : MonoBehaviour {
 
     public bool boostMode;
     public CanSpawn can;
-    private Microphone mic;
 
     // Use this for initialization
     void Start () {
